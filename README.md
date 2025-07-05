@@ -84,6 +84,3 @@ Web Pentester | Bug Bounty Hunter
 
 ---
 
-## 📜 License
-
-This repository is licensed under the **MIT License** – feel free to learn from it, use it, and contribute back.
