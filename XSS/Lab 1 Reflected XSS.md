@@ -12,8 +12,9 @@
 
 1. ✅ **Typed `coffee`** in search → reflected in:
    - URL parameter  
-   - Page body:  
-     ```html
+   - Page body:
+     
+   ```html
      <h1>0 search results for 'coffee'</h1>
      ```
 
