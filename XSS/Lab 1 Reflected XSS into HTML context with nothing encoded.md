@@ -1,4 +1,4 @@
-# Lab: Reflected XSS into HTML context with nothing encoded  
+## 🧪  Lab: Reflected XSS into HTML context with nothing encoded  
 **Level:** APPRENTICE  
 
 ---
