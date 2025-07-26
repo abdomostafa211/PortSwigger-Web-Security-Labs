@@ -56,11 +56,11 @@ Obtain and submit the version number of the exposed framework.
   ```
 
 - That stack trace leaked the framework and its version.  
-- So the flag is: `2.3.31`
+- So the flag is: `2 2.3.31`
 
-### 🧨 Final Payload  
+### 🧨 flag is  
 ```
-2.3.31
+2 2.3.31
 ```
 
 ### 📝 Notes  
