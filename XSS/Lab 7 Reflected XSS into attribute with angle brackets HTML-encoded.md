@@ -1,6 +1,4 @@
-تمام يسطا، اهو لاب **Lab 7** كله في بلوك واحد زي ما طلبت:
 
-```markdown
 ## 🧪 Lab 7 - Reflected XSS into attribute with angle brackets HTML-encoded (APPRENTICE)
 
 ---
