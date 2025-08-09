@@ -51,6 +51,3 @@ Inject an attribute-based payload to trigger `alert()` despite angle bracket enc
 ---
 
 **✅ Status: Solved**
-
-```
-```
