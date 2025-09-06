@@ -1,0 +1,48 @@
+## Lab 3: User role controlled by request parameter (Apprentice)
+
+### 🎯 Mission Description  
+This lab has an admin panel at `/admin`, which identifies admins using a forgeable cookie.
+
+### 🎯 Mission Objective  
+Log in, escalate privileges by tampering with the cookie, then delete user `carlos`.
+
+### 🧪 Steps (My Approach)
+
+1. Logged in as normal user:  
+
+Username: wiener
+Password: peter
+
+
+2. Tried accessing `/admin`.  
+→ Got error: "Admin interface only available if logged in as an administrator."
+
+3. Intercepted request in Burp and noticed:  
+
+Cookie: Admin=false
+
+
+4. Changed cookie from `false` to `true`.  
+→ Gained access to `/admin`.
+
+5. Deleted user `carlos`.  
+→ Success.
+
+---
+
+### ✅ Final Step  
+Tampered cookie:  
+
+Admin=true
+
+
+---
+
+### 🧠 Notes  
+- Insecure role-based access control.  
+- Roles must be enforced server-side, not client-side.  
+- Cookie tampering is a common access control bypass.  
+
+---
+
+### ✅ Status: Solved 🎉  
