@@ -1,27 +1,89 @@
-## Lab: Information disclosure on debug page — APPRENTICE
+# Information Disclosure on Debug Page
 
-### 🧠 Mission Description  
+**Difficulty:** `APPRENTICE` | **Category:** `Information Disclosure`
+
+---
+
+## 🎯 Lab Goal
+
+Find and submit the `SECRET_KEY` environment variable exposed through a debug page.
+
+---
+
+## 📋 Lab Description
+
 This lab contains a debug page that discloses sensitive information about the application.
 
-### 🎯 Mission Objective  
-Find and submit the `SECRET_KEY` environment variable.
+---
 
-### 🪜 Steps  
-- Opened the page source → spotted a juicy comment:  
-  `<!--  <a href=/cgi-bin/phpinfo.php>Debug</a> -->`  
-- Opened the debug page directly:  
-  `https://0ac50042038128a38067f3b8009c0048.web-security-academy.net/cgi-bin/phpinfo.php`  
-- The page shows full PHP info output.  
-- Scrolled through and found this line:  
-  `SECRET_KEY	tt7ibqee5bnpf1oc4m13logahuauax37`
+## 🔎 Reconnaissance
 
-### 🧨 Final Payload  
-```
-tt7ibqee5bnpf1oc4m13logahuauax37
+Started by examining the page source for any hidden clues.
+
+### Source Code Analysis
+
+Found an interesting HTML comment:
+
+```html
+<!-- <a href=/cgi-bin/phpinfo.php>Debug</a> -->
 ```
 
-### 📝 Notes  
-- Leaving debug tools like `phpinfo()` accessible in production environments is a big no-no.  
-- These pages can leak environment variables, file paths, config details — basically everything an attacker dreams of.
+This revealed a debug endpoint that was commented out but still accessible.
 
-**Status: Solved ✅**
+---
+
+## 🧪 Testing & Exploitation
+
+### Accessing the Debug Page
+
+Navigated directly to the discovered endpoint:
+
+```
+https://[lab-id].web-security-academy.net/cgi-bin/phpinfo.php
+```
+
+### Information Leakage
+
+The page displayed full PHP configuration information via `phpinfo()` output.
+
+**Critical Finding:**
+
+Scrolled through the environment variables section and found:
+
+```
+SECRET_KEY: tt7ibqee5bnpf1oc4m13logahuauax37
+```
+
+---
+
+## 🚩 Solution
+
+**Answer:** `tt7ibqee5bnpf1oc4m13logahuauax37`
+
+---
+
+## 💡 Key Takeaways
+
+- **Debug pages** like `phpinfo()` should **never** be accessible in production
+- **HTML comments** can leak sensitive paths even if links are hidden from UI
+- **phpinfo()** exposes:
+  - Environment variables (including secrets)
+  - Server configuration
+  - File paths and directory structure
+  - Installed modules and versions
+  - Database credentials (if in env vars)
+- Always check **source code** for commented-out debugging features
+
+---
+
+## 🛡️ Remediation
+
+- Remove or disable `phpinfo()` and similar debug tools in production
+- Implement proper access controls for diagnostic endpoints
+- Use environment-specific configurations
+- Don't rely on "security through obscurity" (hiding links in comments)
+- Regular security audits to identify exposed debug functionality
+
+---
+
+**Status:** ✅ Solved
