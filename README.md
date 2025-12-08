@@ -78,8 +78,7 @@ I use it to:
 ## 👨‍💻 Author
 
 **Abdelrahman Mostafa**  
-Web Pentester | Bug Bounty Hunter  
-📍 Giza, Egypt  
+Web Pentester | Bug Bounty Hunter   
 🛠 Passionate about breaking the web to make it safer
 
 ---
